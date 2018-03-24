@@ -1,64 +1,5 @@
 # **1.1** Governance
 
-## Aggregate high-level report on resource consumption in a Namespace {#aggregatereportonnamespace}
-
-For each [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), aggregate a rough overview of resource consumption in
-that Namespace. This could be arbitrarily complex; here we simply aggregate a
-count of several critical resources in that Namespace.
-
-**Query:**
-
-{% codetabs name="Extended JavaScript", type="ts" -%}
-{%- language name="TypeScript", type="ts" -%}
-import {Client, query} from "carbonql";
-
-const c = Client.fromFile(<string>process.env.KUBECONFIG);
-const report = c.core.v1.Namespace
-  .list()
-  .flatMap(ns =>
-    query.Observable.forkJoin(
-      query.Observable.of(ns),
-      c.core.v1.Pod.list(ns.metadata.name).toArray(),
-      c.core.v1.Secret.list(ns.metadata.name).toArray(),
-      c.core.v1.Service.list(ns.metadata.name).toArray(),
-      c.core.v1.ConfigMap.list(ns.metadata.name).toArray(),
-      c.core.v1.PersistentVolumeClaim.list(ns.metadata.name).toArray(),
-    ));
-
-// Print small report.
-report.forEach(([ns, pods, secrets, services, configMaps, pvcs]) => {
-  console.log(ns.metadata.name);
-  console.log(`  Pods:\t\t${pods.length}`);
-  console.log(`  Secrets:\t${secrets.length}`);
-  console.log(`  Services:\t${services.length}`);
-  console.log(`  ConfigMaps:\t${configMaps.length}`);
-  console.log(`  PVCs:\t\t${pvcs.length}`);
-});
-{%- endcodetabs %}
-
-**Output:**
-
-```
-default
-  Pods:        9
-  Secrets:    1
-  Services:    2
-  ConfigMaps:    0
-  PVCs:        0
-kube-public
-  Pods:        0
-  Secrets:    1
-  Services:    0
-  ConfigMaps:    0
-  PVCs:        0
-kube-system
-  Pods:        4
-  Secrets:    2
-  Services:    2
-  ConfigMaps:    2
-  PVCs:        0
-```
-
 ## Audit all Certificates, including status, user, and requested usages {#certsignrequests}
 
 Retrieve all [CertificateSigningRequests](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#step-1-create-a-certificate-signing-request) in all namespaces. Group them by status \(_i.e._, `"Pending"`, `"Approved"` or `"Denied"`\), and then for each, report \(1\) the status of the request, \(2\) group information about the requesting user, and \(3\) the requested usages for the certificate.
@@ -358,6 +299,64 @@ User    jane
 User    frank
 User    susan
 User    bill
+```
+
+## Aggregate high-level report on resource consumption in a Namespace {#aggregatereportonnamespace}
+
+For each [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), aggregate a rough overview of resource consumption in
+that Namespace. This could be arbitrarily complex; here we simply aggregate a
+count of several critical resources in that Namespace.
+
+**Query:**
+
+```typescript
+import {Client, query} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const report = c.core.v1.Namespace
+  .list()
+  .flatMap(ns =>
+    query.Observable.forkJoin(
+      query.Observable.of(ns),
+      c.core.v1.Pod.list(ns.metadata.name).toArray(),
+      c.core.v1.Secret.list(ns.metadata.name).toArray(),
+      c.core.v1.Service.list(ns.metadata.name).toArray(),
+      c.core.v1.ConfigMap.list(ns.metadata.name).toArray(),
+      c.core.v1.PersistentVolumeClaim.list(ns.metadata.name).toArray(),
+    ));
+
+// Print small report.
+report.forEach(([ns, pods, secrets, services, configMaps, pvcs]) => {
+  console.log(ns.metadata.name);
+  console.log(`  Pods:\t\t${pods.length}`);
+  console.log(`  Secrets:\t${secrets.length}`);
+  console.log(`  Services:\t${services.length}`);
+  console.log(`  ConfigMaps:\t${configMaps.length}`);
+  console.log(`  PVCs:\t\t${pvcs.length}`);
+});
+```
+
+**Output:**
+
+```
+default
+  Pods:        9
+  Secrets:    1
+  Services:    2
+  ConfigMaps:    0
+  PVCs:        0
+kube-public
+  Pods:        0
+  Secrets:    1
+  Services:    0
+  ConfigMaps:    0
+  PVCs:        0
+kube-system
+  Pods:        4
+  Secrets:    2
+  Services:    2
+  ConfigMaps:    2
+  PVCs:        0
 ```
 
 ## List Pods and their ServiceAccount \(possibly a unique user\) by Secrets they use {#podsandsvcacctbysecretuse}
