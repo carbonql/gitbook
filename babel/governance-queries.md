@@ -1,16 +1,5 @@
 # **1.1** Governance
 
-
-{% codetabs name="Python", type="py" -%}
-msg = "Hello World"
-print msg
-{%- language name="JavaScript", type="js" -%}
-var msg = "Hello World";
-console.log(msg);
-{%- language name="HTML", type="html" -%}
-<b>Hello World</b>
-{%- endcodetabs %}
-
 ## Audit all Certificates, including status, user, and requested usages {#certsignrequests}
 
 Retrieve all [CertificateSigningRequests](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#step-1-create-a-certificate-signing-request) in all namespaces. Group them by status \(_i.e._, `"Pending"`, `"Approved"` or `"Denied"`\), and then for each, report \(1\) the status of the request, \(2\) group information about the requesting user, and \(3\) the requested usages for the certificate.
