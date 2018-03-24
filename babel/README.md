@@ -1,4 +1,4 @@
-# **1** Queries in extended JavaScript syntax
+# **1** Queries in Syntax-Extended JavaScript syntax
 
 This chapter contains a cookbook of example queries using the CarbonQL client libraries.
 
@@ -6,7 +6,7 @@ Each example is provided in both TypeScript and an experimental JavaScript clien
 
 For example, below we have a query that will retrieve and print all versions of the `mysql` container running in the cluster. Notice that the query is freely intermingled with JavaScript source, which is possible because we've extended the language to support it. (Copied from [an example][mysql] in the ["governance" section][gov].)
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);

@@ -6,7 +6,7 @@ Retrieve all [CertificateSigningRequests](https://kubernetes.io/docs/tasks/tls/m
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, transform} from "carbonql";
 const certificates = transform.certificates;
 
@@ -70,7 +70,7 @@ Search all running Kubernetes [Pods](https://kubernetes.io/docs/concepts/workloa
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -114,7 +114,7 @@ Retrieve all Kubernetes [Namespaces](https://kubernetes.io/docs/concepts/overvie
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -163,7 +163,7 @@ Retrieve all [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/), fi
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, certificates} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -212,7 +212,7 @@ This query will find all Services whose type is `"LoadBalancer"`, so they can be
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -256,7 +256,7 @@ Inspect every Kubernetes RBAC [Role](https://kubernetes.io/docs/admin/authorizat
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, transform} from "carbonql";
 const rbac = transform.rbacAuthorization
 
@@ -367,7 +367,7 @@ Here we print \(1\) the name of the Secret, \(2\) the list of Pods that use it, 
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -446,7 +446,7 @@ Obtain all `"Bound"` [PersistentVolumes](https://kubernetes.io/docs/concepts/sto
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);

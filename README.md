@@ -1,4 +1,4 @@
-# Carbon QL Cookbook (pre-release alpha) {#introduction}
+# Learn CarbonQL (pre-release alpha) {#introduction}
 
 The [Carbon Query Language](https://github.com/carbonql) \(colloquially, _CarbonQL_\) is a query interface for Kubernetes resources. It makes it easy to answer questions like:
 
@@ -13,14 +13,15 @@ The [Carbon Query Language](https://github.com/carbonql) \(colloquially, _Carbon
   * Which [Services](https://kubernetes.io/docs/concepts/services-networking/service/) are publicly exposed to the Internet?
   * How many distinct versions of the `mysql` container are running in _all of my clusters_?
 
-
 One way to think about CarbonQL is as an ORM for the Kubernetes API.
 
 ## How does it work? {#how-does-it-work}
 
-The user writes a program in one of the supported languages, against the CarbonQL client library. In the following example, we programmatically build up a query using the CarbonQL TypeScript client library, to find all versions of the MySQL container running in the cluster:
+The user writes a program in one of the supported languages, against the CarbonQL client library.
 
-```typescript
+In the following example, we programmatically build up a query using the CarbonQL TypeScript client library, to find all versions of the MySQL container running in the cluster. (**NOTE:** We present this example in both TypeScript and a "syntax-extended JavaScript". We will explain the second in the next section.)
+
+{% codetabs name="TypeScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -35,7 +36,20 @@ const mySqlVersions = c.core.v1.Pod
 
 // Prints the distinct container image tags.
 mySqlVersions.forEach(console.log);
-```
+{%- language name="Syntax-Extended JavaScript", type="ts" -%}
+import {Client, query} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const mySqlVersions =
+  from pod in c.core.v1.Pod.list("default")
+  from container in pod.spec.containers
+  // Filter image names that don't include "mysql", return distinct.
+  where container.image.includes("mysql")
+  // Return just the container image.
+  select container.image;
+
+mySqlVersions.distinct().forEach(console.log);
+{%- endcodetabs %}
 
 **Currently supported languages:**
 
@@ -49,7 +63,7 @@ mySqlVersions.forEach(console.log);
 
 ## Experimental syntax extensions for JavaScript {#experimental-js}
 
-In addition to supporting vanilla TypeScript and JavaScript, the CarbonQL client provides a Babel plugin that allows users to use SQL keywords directly in their JavaScript programs. The previous TypeScript example would be re-written as:
+In the tabbed code example above, you can see that in addition to supporting vanilla TypeScript and JavaScript, the CarbonQL client provides a Babel plugin that allows users to use SQL keywords directly in their JavaScript programs. Specifically, keywords like `where`, `from`, and `select` are added to JavaScript:
 
 ```typescript
 import {Client, query} from "carbonql";
@@ -66,7 +80,9 @@ const mySqlVersions =
 mySqlVersions.distinct().forEach(console.log);
 ```
 
-We are currently gathering feedback about the syntax of this extension, so it's not currently part of mainline, but if you're interested you should drop us a note at thomas@saunter.com and clemmer.alexander@gmail.com.
+These are desugared down to "normal" method calls you see in the TypeScript example.
+
+We are currently gathering feedback about the syntax of this extension, so it's not currently part of mainline, but if you're interested you should drop us a note at <mailto:thomas@saunter.com> and <mailto:clemmer.alexander@gmail.com>.
 
 
 

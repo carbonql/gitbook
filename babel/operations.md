@@ -8,7 +8,7 @@ the logs grouped by Pod name.
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query, transform} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -77,7 +77,7 @@ these two revisions.
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query, transform} from "carbonql";
 const jsondiff = require("jsondiffpatch");
 
@@ -135,7 +135,7 @@ report high memory pressure.
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -202,7 +202,7 @@ from \[Pods\]\[pods\], so we group them together by their place of origin.
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="ts" -%}
+{% codetabs name="Syntax-Extended JavaScript", type="ts" -%}
 import {client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);

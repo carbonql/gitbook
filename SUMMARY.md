@@ -2,12 +2,12 @@
 
 ## Overview
 
-* [Carbon QL Cookbook](README.md)
+* [Learn CarbonQL](README.md)
   * [How does it work?](README.md#how-does-it-work)
   * [Experimental syntax extensions for JavaScript](README.md#experimental-js)
 
 ## Cookbook
-* [**1** Query examples](babel/README.md)
+* [**1** Query Cookbook](babel/README.md)
   * [**1.1** Governance Queries](babel/governance-queries.md)
     * [Audit all Certificates, including status, user, and requested usages](babel/governance-queries.md#certsignrequests)
     * [Distinct versions of `mysql` container in cluster](babel/governance-queries.md#distinctmysqlversions)
