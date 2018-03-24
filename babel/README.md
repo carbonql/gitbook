@@ -1,13 +1,12 @@
 # **1** Queries in extended JavaScript syntax
 
-This chapter contains a cookbook of examples using the experimental CarbonQL JavaScript client. They are the exact same as those in the [TypeScript cookbook][ts], so that it's possible to compare the two.
+This chapter contains a cookbook of example queries using the CarbonQL client libraries.
 
-The JavaScript client uses the Babel JavaScript compiler's plugin API to embed SQL-like keywords into the JavaScript language, making it easier for non-programmers to write queries against the CarbonQL API.
+Each example is provided in both TypeScript and an experimental JavaScript client. This JavaScript client uses the Babel JavaScript compiler's plugin API to embed SQL-like keywords into the JavaScript language, making it easier for non-programmers to write queries against the CarbonQL API.
 
 For example, below we have a query that will retrieve and print all versions of the `mysql` container running in the cluster. Notice that the query is freely intermingled with JavaScript source, which is possible because we've extended the language to support it. (Copied from [an example][mysql] in the ["governance" section][gov].)
 
-
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -20,10 +19,24 @@ const mySqlVersions =
   select container.image;
 
 mySqlVersions.distinct().forEach(console.log);
+{%- language name="TypeScript", type="ts" -%}
+import {Client, query} from "carbonql";
 
-```
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const mySqlVersions = c.core.v1.Pod
+  .list("default")
+  // Obtain all container image names running in all pods.
+  .flatMap(pod => pod.spec.containers)
+  .map(container => container.image)
+  // Filter image names that don't include "mysql", return distinct.
+  .filter(imageName => imageName.includes("mysql"))
+  .distinct();
 
-Because this extension is still experimental, it is **not yet available**, though it will be if we get positive feedback.
+// Prints the distinct container image tags.
+mySqlVersions.forEach(console.log);
+{%- endcodetabs %}
+
+Because we are still working on the exact syntax and semantics, the experimental JavaScript is **not yet available**. It will be if we get positive feedback.
 
 The chapter is broken up into two sections, each with a different motivating use case:
 

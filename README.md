@@ -68,18 +68,6 @@ mySqlVersions.distinct().forEach(console.log);
 
 We are currently gathering feedback about the syntax of this extension, so it's not currently part of mainline, but if you're interested you should drop us a note at thomas@saunter.com and clemmer.alexander@gmail.com.
 
-## Structure of this gitbook {#structure-of-book}
-
-This document is meant mostly to provide some simple example queries demonstrating what is possible with the CarbonQL client today.
-
-Because we are still figuring out what we want the syntax to look like, the book is split into two sections:
-
-* A [TypeScript section](https://hausdorff.gitbooks.io/carbonql/content/typescript/) containing examples written in TypeScript. It is possible to run these queries out of the box, today.
-* A [Babel section](https://hausdorff.gitbooks.io/carbonql/content/babel/) containing the exact same examples, except written using an experimental Babel plugin, which extends the JavaScript language to have SQL-like keywords, making it easier for people to write queries even if they're not programmers.
-
-  For example, consider the following code snippet which would finds all distinct versions of the `mysql` container running in a Kubernetes cluster. \(Copied from [an example](https://hausdorff.gitbooks.io/carbonql/content/babel/governance-queries.html#distinctmysqlversions) in the ["governance" section](https://hausdorff.gitbooks.io/carbonql/content/babel/governance-queries.html).\)
-
-  NOTE: Because this syntax is not fully baked yet, it is **not yet available**. If feedback is positive, it soon will be.
 
 
 

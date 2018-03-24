@@ -5,7 +5,6 @@
 * [Carbon QL Cookbook](README.md)
   * [How does it work?](README.md#how-does-it-work)
   * [Experimental syntax extensions for JavaScript](README.md#experimental-js)
-  * [Structure of this gitbook](README.md#structure-of-book)
 
 ## Cookbook
 * [**1** Query examples](babel/README.md)
