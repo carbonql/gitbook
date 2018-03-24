@@ -1,12 +1,71 @@
 # **1.1** Governance
 
+## Aggregate high-level report on resource consumption in a Namespace {#aggregatereportonnamespace}
+
+For each [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), aggregate a rough overview of resource consumption in
+that Namespace. This could be arbitrarily complex; here we simply aggregate a
+count of several critical resources in that Namespace.
+
+**Query:**
+
+{% codetabs name="Extended JavaScript", type="ts" -%}
+{%- language name="TypeScript", type="ts" -%}
+import {Client, query} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const report = c.core.v1.Namespace
+  .list()
+  .flatMap(ns =>
+    query.Observable.forkJoin(
+      query.Observable.of(ns),
+      c.core.v1.Pod.list(ns.metadata.name).toArray(),
+      c.core.v1.Secret.list(ns.metadata.name).toArray(),
+      c.core.v1.Service.list(ns.metadata.name).toArray(),
+      c.core.v1.ConfigMap.list(ns.metadata.name).toArray(),
+      c.core.v1.PersistentVolumeClaim.list(ns.metadata.name).toArray(),
+    ));
+
+// Print small report.
+report.forEach(([ns, pods, secrets, services, configMaps, pvcs]) => {
+  console.log(ns.metadata.name);
+  console.log(`  Pods:\t\t${pods.length}`);
+  console.log(`  Secrets:\t${secrets.length}`);
+  console.log(`  Services:\t${services.length}`);
+  console.log(`  ConfigMaps:\t${configMaps.length}`);
+  console.log(`  PVCs:\t\t${pvcs.length}`);
+});
+{%- endcodetabs %}
+
+**Output:**
+
+```
+default
+  Pods:        9
+  Secrets:    1
+  Services:    2
+  ConfigMaps:    0
+  PVCs:        0
+kube-public
+  Pods:        0
+  Secrets:    1
+  Services:    0
+  ConfigMaps:    0
+  PVCs:        0
+kube-system
+  Pods:        4
+  Secrets:    2
+  Services:    2
+  ConfigMaps:    2
+  PVCs:        0
+```
+
 ## Audit all Certificates, including status, user, and requested usages {#certsignrequests}
 
 Retrieve all [CertificateSigningRequests](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#step-1-create-a-certificate-signing-request) in all namespaces. Group them by status \(_i.e._, `"Pending"`, `"Approved"` or `"Denied"`\), and then for each, report \(1\) the status of the request, \(2\) group information about the requesting user, and \(3\) the requested usages for the certificate.
 
 **Query:**
 
-{% codetabs name="Extended JavaScript", type="py" -%}
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, transform} from "carbonql";
 const certificates = transform.certificates;
 
@@ -70,7 +129,7 @@ Search all running Kubernetes [Pods](https://kubernetes.io/docs/concepts/workloa
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -83,7 +142,22 @@ const mySqlVersions =
   select container.image;
 
 mySqlVersions.distinct().forEach(console.log);
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client, query} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const mySqlVersions = c.core.v1.Pod
+  .list("default")
+  // Obtain all container image names running in all pods.
+  .flatMap(pod => pod.spec.containers)
+  .map(container => container.image)
+  // Filter image names that don't include "mysql", return distinct.
+  .filter(imageName => imageName.includes("mysql"))
+  .distinct();
+
+// Prints the distinct container image tags.
+mySqlVersions.forEach(console.log);
+{%- endcodetabs %}
 
 **Output:**
 
@@ -99,7 +173,7 @@ Retrieve all Kubernetes [Namespaces](https://kubernetes.io/docs/concepts/overvie
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -115,7 +189,24 @@ const noQuotas =
   select ns;
 
 noQuotas.forEach(ns => console.log(ns.metadata.name));
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const noQuotas = c.core.v1.Namespace
+  .list()
+  .flatMap(ns =>
+    c.core.v1.ResourceQuota
+      .list(ns.metadata.name)
+      // Retrieve only ResourceQuotas that (1) apply to this namespace, and (2)
+      // specify hard limits on memory.
+      .filter(rq => rq.spec.hard["limits.memory"] != null)
+      .toArray()
+      .flatMap(rqs => rqs.length == 0 ? [ns] : []))
+
+// Print.
+noQuotas.forEach(ns => console.log(ns.metadata.name))
+{%- endcodetabs %}
 
 **Output:**
 
@@ -131,7 +222,7 @@ Retrieve all [Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod/), fi
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, certificates} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -141,7 +232,18 @@ const noServiceAccounts =
   select pod;
 
 noServiceAccounts.forEach(pod => console.log(pod.metadata.name));
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client, certificates} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const noServiceAccounts = c.core.v1.Pod
+  .list()
+  .filter(pod =>
+    pod.spec.serviceAccountName == null ||
+    pod.spec.serviceAccountName == "default");
+
+noServiceAccounts.forEach(pod => console.log(pod.metadata.name));
+{%- endcodetabs %}
 
 **Output:**
 
@@ -169,7 +271,7 @@ This query will find all Services whose type is `"LoadBalancer"`, so they can be
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -181,7 +283,20 @@ const loadBalancers =
 // Print.
 loadBalancers.forEach(
   svc => console.log(`${svc.metadata.namespace}/${svc.metadata.name}`));
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const loadBalancers = c.core.v1.Service
+  .list()
+  // Type services with `.spec.type` set to `"LoadBalancer"` are exposed to the
+  // Internet publicly.
+  .filter(svc => svc.spec.type == "LoadBalancer");
+
+// Print.
+loadBalancers.forEach(
+  svc => console.log(`${svc.metadata.namespace}/${svc.metadata.name}`));
+{%- endcodetabs %}
 
 **Output:**
 
@@ -200,7 +315,7 @@ Inspect every Kubernetes RBAC [Role](https://kubernetes.io/docs/admin/authorizat
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, transform} from "carbonql";
 const rbac = transform.rbacAuthorization
 
@@ -212,7 +327,29 @@ const subjectsWithSecretAccess =
   select binding.subjects;
 
 subjectsWithSecretAccess.forEach(subj => console.log(`${subj.kind}\t${subj.name}`));
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client, transform} from "carbonql";
+const rbac = transform.rbacAuthorization
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const subjectsWithSecretAccess = c.rbacAuthorization.v1beta1.Role
+  .list()
+  // Find Roles that apply to `core.v1.Secret`. Note the empty string denotes
+  // the `core` namespace.
+  .filter(role => rbac.v1beta1.role.appliesTo(role, "", "secrets"))
+  .flatMap(role => {
+    return c.rbacAuthorization.v1beta1.RoleBinding
+      .list()
+      // Find RoleBindings that apply to `role`. Project to a list of subjects
+      // (e.g., Users) `role` is bound to.
+      .filter(binding =>
+        rbac.v1beta1.roleBinding.referencesRole(binding, role.metadata.name))
+      .flatMap(binding => binding.subjects)
+  });
+
+// Print subjects.
+subjectsWithSecretAccess.forEach(subj => console.log(`${subj.kind}\t${subj.name}`));
+{%- endcodetabs %}
 
 **Output:**
 
@@ -231,7 +368,7 @@ Here we print \(1\) the name of the Secret, \(2\) the list of Pods that use it, 
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -256,7 +393,31 @@ podsByClaim.forEach(({secret, pods}) => {
   console.log(secret.metadata.name);
   pods.forEach(pod => console.log(`  ${pod.spec.serviceAccountName} ${pod.metadata.namespace}/${pod.metadata.name}`));
 });
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client, query} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const podsByClaim = c.core.v1.Secret
+  .list()
+  .flatMap(secret =>
+    c.core.v1.Pod
+      .list()
+      .filter(pod =>
+        pod.spec
+          .volumes
+          .filter(vol =>
+            vol.secret &&
+            vol.secret.secretName == secret.metadata.name)
+          .length > 0)
+      .toArray()
+      .map(pods => {return {secret: secret, pods: pods}}));
+
+// Print.
+podsByClaim.forEach(({secret, pods}) => {
+  console.log(secret.metadata.name);
+  pods.forEach(pod => console.log(`  ${pod.spec.serviceAccountName} ${pod.metadata.namespace}/${pod.metadata.name}`));
+});
+{%- endcodetabs %}
 
 **Input:**
 
@@ -286,7 +447,7 @@ Obtain all `"Bound"` [PersistentVolumes](https://kubernetes.io/docs/concepts/sto
 
 **Query:**
 
-```typescript
+{% codetabs name="Extended JavaScript", type="ts" -%}
 import {Client, query} from "carbonql";
 
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
@@ -312,7 +473,32 @@ podsByClaim.forEach(({pv, pods}) => {
   console.log(pv.metadata.name);
   pods.forEach(pod => console.log(`  ${pod.metadata.namespace}/${pod.metadata.name}`));
 });
-```
+{%- language name="TypeScript", type="ts" -%}
+import {Client, query} from "carbonql";
+
+const c = Client.fromFile(<string>process.env.KUBECONFIG);
+const podsByClaim = c.core.v1.PersistentVolume
+  .list()
+  .filter(pv => pv.status.phase == "Bound")
+  .flatMap(pv =>
+    c.core.v1.Pod
+      .list()
+      .filter(pod =>
+        pod.spec
+          .volumes
+          .filter(vol =>
+            vol.persistentVolumeClaim &&
+            vol.persistentVolumeClaim.claimName == pv.spec.claimRef.name)
+          .length > 0)
+      .toArray()
+      .map(pods => {return {pv: pv, pods: pods}}));
+
+// Print.
+podsByClaim.forEach(({pv, pods}) => {
+  console.log(pv.metadata.name);
+  pods.forEach(pod => console.log(`  ${pod.metadata.name}`));
+});
+{%- endcodetabs %}
 
 **Output:**
 
