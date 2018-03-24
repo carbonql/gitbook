@@ -3,15 +3,15 @@
 The [Carbon Query Language](https://github.com/carbonql) \(colloquially, _CarbonQL_\) is a query interface for Kubernetes resources. It makes it easy to answer questions like:
 
 * **Operations:**
-  * Which applications are scheduled on nodes that report high memory pressure?
-  * What is the difference between the last two rollouts of a [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)?
+  * Which applications are scheduled on nodes that report high memory pressure? (See [example](babel/operations.md#podsonnodeswithmempressure).)
+  * What is the difference between the last two rollouts of a [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)? (See [example](babel/operations.md#historyofdeployment).)
   * Which applications are currently emitting logs that contain the text `"ERROR:"`, and why?
 * **Security and Compliance:**
-  * Which [Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) have access to this [Secret](https://kubernetes.io/docs/concepts/configuration/secret/)?
-  * Which [CertificateSigningRequests](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#step-1-create-a-certificate-signing-request) were approved this week, and what are they being used for?
+  * Which [Service Accounts](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/) have access to this [Secret](https://kubernetes.io/docs/concepts/configuration/secret/)? (See [example](babel/governance-queries.md#userswithsecretaccess).)
+  * Which [CertificateSigningRequests](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/#step-1-create-a-certificate-signing-request) were approved this week, and what are they being used for? (See [example](babel/governance-queries.md#certsignrequests).)
 * **Governance:**
-  * Which [Services](https://kubernetes.io/docs/concepts/services-networking/service/) are publicly exposed to the Internet?
-  * How many distinct versions of the `mysql` container are running in _all of my clusters_?
+  * Which [Services](https://kubernetes.io/docs/concepts/services-networking/service/) are publicly exposed to the Internet? (See [example](babel/governance-queries.md#servicespubliclyexposed).)
+  * How many distinct versions of the `mysql` container are running in _all of my clusters_? (See [example](babel/governance-queries.md#distinctmysqlversions).)
 
 One way to think about CarbonQL is as an ORM for the Kubernetes API.
 
