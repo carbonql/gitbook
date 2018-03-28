@@ -1,4 +1,4 @@
-# **1** Implementing Kubernetes-native `tail` and `grep`
+# **1** Getting started: A Kubernetes-native `tail` and `grep`
 
 The Kubernetes logs API allows people to retrieve logs from individual [Pods][pod]. Probably the most common way to interact with this API is to use `kubectl`, which will retrieve logs from all containers in a Pod. In the example below, we see logs from two separate containers (`mysql` and `nginx`) in a single Pod, `someapp-5-66f5b49b8f-5r48g`:
 

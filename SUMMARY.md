@@ -7,9 +7,9 @@
   * [Experimental syntax extensions for JavaScript](README.md#experimental-js)
   * [Structure of this gitbook](README.md#structure)
 
-## Implementing Kubernetes-native Unix utilities
+## Getting started: Implementing Kubernetes-native Unix utilities
 
-* [**1** Implementing Kubernetes-native `tail`, and `grep`](tutorial/README.md)
+* [**1** A Kubernetes-native `tail`, and `grep`](tutorial/README.md)
   * [**1.1** A Kubernetes-native `tail`](tutorial/tail.md)
   * [**1.2** A Kubernetes-native `grep`](tutorial/grep.md)
 
