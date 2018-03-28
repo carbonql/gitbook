@@ -1,4 +1,4 @@
-# **1** Implementing Kubernetes-native `tail`, and `grep`
+# **1** Implementing Kubernetes-native `tail` and `grep`
 
 The Kubernetes logs API allows people to retrieve logs from individual [Pods][pod]. Probably the most common way to interact with this API is to use `kubectl`, which will retrieve logs from all containers in a Pod. In the example below, we see logs from two separate containers (`mysql` and `nginx`) in a single Pod, `someapp-5-66f5b49b8f-5r48g`:
 
@@ -192,7 +192,7 @@ If you'd like to see the actual code used to generate this example, have a look 
 
 [coming soon!]
 
-[^1]: One of the authors of CarbonQL began his career working on the Rx3 core team (back when the "official" Rx was implemented in C#, and implementations in other languages had suffixes like RxJS, RxJava, _etc._). This is one of the reasons it's so heavily used in the client API.
+<!-- [^1]: One of the authors of CarbonQL began his career working on the Rx3 core team (back when the "official" Rx was implemented in C#, and implementations in other languages had suffixes like RxJS, RxJava, _etc._). This is one of the reasons it's so heavily used in the client API. -->
 
 [pod]: https://kubernetes.io/docs/concepts/workloads/pods/pod/
 [unix]: https://github.com/carbonql/carbon-ts/tree/master/examples/unix
