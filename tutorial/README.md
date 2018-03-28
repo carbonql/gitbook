@@ -115,6 +115,7 @@ In the non-streaming case, this is more or less what we'd hoped to get: a set of
 But what about the case where the logs are streaming in? Let's change the code to call `logStream` instead of `logs`:
 
 ```typescript
+// NOTE: This code is likely not what you want to write!
 const c = Client.fromFile(<string>process.env.KUBECONFIG);
 c.core.v1.Pod
   .list("default")
