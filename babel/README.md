@@ -1,4 +1,4 @@
-# **1** Queries in Syntax-Extended JavaScript syntax
+# **2** Queries in Syntax-Extended JavaScript syntax
 
 This chapter contains a cookbook of example queries using the CarbonQL client libraries.
 

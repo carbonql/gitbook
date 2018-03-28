@@ -1,4 +1,4 @@
-# **1.2** Operations
+# **2.2** Operations
 
 ## Find all Pod logs containing `"ERROR:"` {#errorlogsgroupedbypod}
 

@@ -84,6 +84,14 @@ These are desugared down to "normal" method calls you see in the TypeScript exam
 
 We are currently gathering feedback about the syntax of this extension, so it's not currently part of mainline, but if you're interested you should drop us a note at <mailto:thomas@saunter.com> and <mailto:clemmer.alexander@gmail.com>.
 
+## Structure of this gitbook {#structure}
 
+CarbonQL is a rich and expressive query interface into Kubernetes. The goal of this book is to arm developers, operators, and engineering/IT leadership, with the ability to use CarbonQL to _make sense of what's happening in their clusters_ and _develop robust applications on Kubernetes_.
 
+This book is currently split into three chapters:
 
+* **Chapter 0: Installation**: Coming soon!
+* **Chapter 1: Implementing Kubernetes-native Unix utilities** -- In this chapter, we will use the CarbonQL toolchain to implement Kubernetes-native versions of `ps`, `tail`, and `grep`. The goal of these tools is to allow users to `tail` or `grep` logs across any subset of Pods in a Kubernetes cluster, either on a batch or streaming basis.
+* **Chapter 2: CarbonQL Cookbook** -- This chapter contains a collection of pre-baked CarbonQL queries that users can run today. The queries are split into sub-groups according to use case:
+  * **Operational queries**, whose goal is to help Kubernetes developers and operators understand the state of the system, to help (_e.g._) mitigate outages.
+  * **Governance queries**, whose goal is to help engineering and IT leadership get a cross-sectional understanding of how the organization is tracking against important goals and metrics related to (_e.g._) security and compliance.
