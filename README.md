@@ -13,7 +13,7 @@
   * Which [Services](https://kubernetes.io/docs/concepts/services-networking/service/) are publicly exposed to the Internet? (See [example](babel/governance-queries.md#servicespubliclyexposed).)
   * How many distinct versions of the `mysql` container are running in _all of my clusters_? (See [example](babel/governance-queries.md#distinctmysqlversions).)
 
-Since the CarbonQL library is written on node.js (with demand, we will expand to other languages), it is possible to use it to make Kubernetes work well with many other tools. For example, it is possible to write queries that:
+Since the CarbonQL library is written on node.js (with demand, we will expand to other languages), it is possible to use it to **make Kubernetes work well with many other tools.** For example, it is possible to write queries that:
 
 * Detect failed rollouts on a streaming basis, and pipe the output into PagerDuty.
 * Continuously look for large changes in the number of pods, and pipe those metrics to Prometheus.
