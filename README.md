@@ -1,6 +1,6 @@
 # Learn CarbonQL (pre-release alpha) {#introduction}
 
-The [Carbon Query Language](https://github.com/carbonql) \(colloquially, _CarbonQL_\) is a query interface for Kubernetes resources. It makes it easy to answer questions like:
+[CarbonQL](https://github.com/carbonql) is a **Kubernetes client library** designed to **make it easy** to **write queries** to get information about **the state of your cluster.** For example:
 
 * **Operations:**
   * Which applications are scheduled on nodes that report high memory pressure? (See [example](babel/operations.md#podsonnodeswithmempressure).)
@@ -13,11 +13,17 @@ The [Carbon Query Language](https://github.com/carbonql) \(colloquially, _Carbon
   * Which [Services](https://kubernetes.io/docs/concepts/services-networking/service/) are publicly exposed to the Internet? (See [example](babel/governance-queries.md#servicespubliclyexposed).)
   * How many distinct versions of the `mysql` container are running in _all of my clusters_? (See [example](babel/governance-queries.md#distinctmysqlversions).)
 
-One way to think about CarbonQL is as an ORM for the Kubernetes API.
+Since the CarbonQL library is written on node.js (with demand, we will expand to other languages), it is possible to use it to make Kubernetes work well with many other tools. For example, it is possible to write queries that:
+
+* Detect failed rollouts on a streaming basis, and pipe the output into PagerDuty.
+* Continuously look for large changes in the number of pods, and pipe those metrics to Prometheus.
+* Check for events where nodes achieve high memory pressure, and pipe the output to Slack.
+
+CarbonQL gracefully handles **both batch and streaming queries.**
 
 ## How does it work? {#how-does-it-work}
 
-The user writes a program in one of the supported languages, against the CarbonQL client library.
+You can the CarbonQL Kubernetes client in the same way you'd use the [Go client](https://github.com/kubernetes/client-go), or any of the other [official Kubernetes clients](https://github.com/kubernetes-client). Users write a program in a supported language, importing the CarbonQL client library, and use that to programmatically construct query that is served by the API server.
 
 In the following example, we programmatically build up a query using the CarbonQL TypeScript client library, to find all versions of the MySQL container running in the cluster. (**NOTE:** We present this example in both TypeScript and a "syntax-extended JavaScript". We will explain the second in the next section.)
 
